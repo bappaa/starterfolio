@@ -1,0 +1,43 @@
+<section class="section">
+  <div class="container">
+    <h3 style="font-size:26px; margin-top:0;">Transaction History</h3>
+
+    <% if (typeof notice !== 'undefined' && notice) { %>
+      <div class="alert <%= noticeType === 'error' ? 'alert-error' : 'alert-success' %>"><%= notice %></div>
+    <% } %>
+
+    <% if (txns.length === 0) { %>
+      <div class="empty-state card"><div class="icon">💳</div><p>No transactions yet.</p></div>
+    <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Type</th><th>Amount</th><th>Method</th><th>Status</th><th>Reference</th><th>Note</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+          <% txns.forEach(t => { %>
+            <tr>
+              <td><%= t.id %></td>
+              <td style="text-transform:capitalize;"><%= t.type.replace('_',' ') %></td>
+              <td style="color: <%= t.type==='deposit' || t.type==='admin_credit' ? '#4ade80' : '#f87171' %>;">
+                <%= (t.type==='deposit' || t.type==='admin_credit') ? '+' : '-' %><%= settings.currency %><%= fmtMoney(t.amount) %>
+              </td>
+              <td><%= t.method || '-' %></td>
+              <td><span class="badge <%= t.status==='Completed' ? 'badge-success' : (t.status==='Pending' ? 'badge-warn' : 'badge-danger') %>"><%= t.status %></span></td>
+              <td><%= t.reference || '-' %></td>
+              <td><%= t.note || '-' %></td>
+              <td><%= t.created_at %></td>
+              <td>
+                <% if (t.type === 'deposit' && t.status !== 'Completed') { %>
+                  <form method="POST" action="/transactions/<%= t.id %>/recheck">
+                    <button type="submit" class="btn btn-sm btn-outline">🔄 Recheck</button>
+                  </form>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <div class="field-hint" style="margin-top:12px;">If you paid but a deposit still shows Pending or Failed, click <strong>Recheck</strong> — this re-verifies the payment directly with the payment gateway and credits your wallet if it actually succeeded.</div>
+    <% } %>
+  </div>
+</section>

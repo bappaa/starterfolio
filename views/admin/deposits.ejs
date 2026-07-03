@@ -1,0 +1,92 @@
+<h1>Manual UPI Deposit Review</h1>
+
+<% if (typeof notice !== 'undefined' && notice) { %>
+  <div class="alert <%= noticeType === 'error' ? 'alert-error' : 'alert-success' %>"><%= notice %></div>
+<% } %>
+
+<h3>🔔 Awaiting Your Approval (<%= pendingReview.length %>)</h3>
+<% if (pendingReview.length === 0) { %>
+  <div class="empty-state card"><div class="icon">✅</div><p>Nothing waiting for review right now.</p></div>
+<% } else { %>
+  <div class="grid grid-2" style="align-items:stretch; margin-bottom:30px;">
+    <% pendingReview.forEach(t => { %>
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div style="font-size:22px; font-weight:800; color:var(--accent);"><%= settings.currency %><%= fmtMoney(t.amount) %></div>
+            <div style="color:var(--text-dim); font-size:13px;"><%= t.user_name %> (<%= t.user_email %>)</div>
+          </div>
+          <span class="badge badge-info">Ref: <%= t.reference %></span>
+        </div>
+        <div style="margin-top:12px; padding:10px 12px; background:var(--bg-soft); border-radius:8px;">
+          <div style="font-size:12px; color:var(--text-dim);">Customer-submitted UTR / Transaction ID</div>
+          <% if (t.gateway_payment_id) { %>
+            <div style="font-family:monospace; font-size:16px; font-weight:700;"><%= t.gateway_payment_id %></div>
+          <% } else { %>
+            <div style="font-size:13px; color:var(--text-dim); font-style:italic;">Not provided — match by amount (<%= settings.currency %><%= fmtMoney(t.amount) %>), reference &amp; submission time in your UPI app / bank statement.</div>
+          <% } %>
+        </div>
+        <div style="font-size:12px; color:var(--text-dim); margin-top:8px;">Submitted: <%= t.created_at %></div>
+
+        <div style="display:flex; gap:8px; margin-top:14px;">
+          <form method="POST" action="/admin/deposits/<%= t.id %>/approve" style="flex:1;" onsubmit="return confirm('Confirm this payment was received and credit the wallet?');">
+            <button type="submit" class="btn btn-success btn-block">✅ Approve &amp; Credit</button>
+          </form>
+        </div>
+        <details style="margin-top:10px;">
+          <summary style="cursor:pointer; color:var(--text-dim); font-size:13px;">Reject instead</summary>
+          <form method="POST" action="/admin/deposits/<%= t.id %>/reject" style="margin-top:8px;" onsubmit="return confirm('Reject this payment? The customer will be notified.');">
+            <div class="field">
+              <input type="text" name="note" placeholder="Reason (optional, sent to customer)">
+            </div>
+            <button type="submit" class="btn btn-danger btn-sm btn-block">❌ Reject</button>
+          </form>
+        </details>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<h3>⏳ Awaiting Customer Payment (<%= awaitingPayment.length %>)</h3>
+<% if (awaitingPayment.length === 0) { %>
+  <div class="empty-state card"><div class="icon">💤</div><p>No pending QR codes right now.</p></div>
+<% } else { %>
+  <div class="table-wrap" style="margin-bottom:30px;">
+    <table>
+      <thead><tr><th>Reference</th><th>User</th><th>Amount</th><th>Created</th></tr></thead>
+      <tbody>
+        <% awaitingPayment.forEach(t => { %>
+          <tr>
+            <td><%= t.reference %></td>
+            <td><%= t.user_name %></td>
+            <td><%= settings.currency %><%= fmtMoney(t.amount) %></td>
+            <td><%= t.created_at %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<h3>📜 Recent Decisions</h3>
+<% if (recentDecisions.length === 0) { %>
+  <div class="empty-state card"><div class="icon">🗒️</div><p>No decisions made yet.</p></div>
+<% } else { %>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Reference</th><th>User</th><th>Amount</th><th>Status</th><th>Note</th><th>Reviewed</th></tr></thead>
+      <tbody>
+        <% recentDecisions.forEach(t => { %>
+          <tr>
+            <td><%= t.reference %></td>
+            <td><%= t.user_name %></td>
+            <td><%= settings.currency %><%= fmtMoney(t.amount) %></td>
+            <td><span class="badge <%= t.status==='Completed' ? 'badge-success' : 'badge-danger' %>"><%= t.status %></span></td>
+            <td><%= t.admin_note || '-' %></td>
+            <td><%= t.reviewed_at %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>

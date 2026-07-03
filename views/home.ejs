@@ -1,0 +1,130 @@
+<section class="hero">
+  <div class="container">
+    <span class="hero-badge">⚡ India's Fastest Growing Cheap SMM Panel</span>
+    <h1>Buy Cheap Instagram Followers, Likes & Views — <span><%= settings.site_name %></span></h1>
+    <p>Buy Instagram Followers, Likes, Views, Reels Views and Comments — plus cheap Facebook, YouTube, Telegram, TikTok and X (Twitter) marketing services. Instant delivery, real growth, starting at just <%= settings.currency %>0.20 per 1000. Add funds to your wallet and start ordering in seconds.</p>
+    <div class="hero-actions">
+      <% if (!currentUser) { %>
+        <a href="/signup" class="btn btn-primary">Create Free Account</a>
+        <a href="/services" class="btn btn-ghost">Browse Services</a>
+      <% } else { %>
+        <a href="/services" class="btn btn-primary">Browse Services</a>
+        <a href="/deposit" class="btn btn-ghost">Add Funds</a>
+      <% } %>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong><%= stats.services %>+</strong><span>Active Services</span></div>
+      <div class="hero-stat"><strong><%= stats.orders %>+</strong><span>Orders Delivered</span></div>
+      <div class="hero-stat"><strong><%= stats.users %>+</strong><span>Happy Customers</span></div>
+      <div class="hero-stat"><strong>24/7</strong><span>Support</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Browse by Platform</h2>
+      <p>Pick a category to see all available services and rates.</p>
+    </div>
+    <div class="grid grid-4">
+      <% categories.slice(0,8).forEach(c => { %>
+        <a href="/services?category=<%= c.id %>" class="card cat-card">
+          <span class="icon"><%= c.icon %></span>
+          <h3><%= c.name %></h3>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--bg-soft); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="section-head">
+      <h2>🔥 Most Popular Services</h2>
+      <p>Our best-selling, highest quality services.</p>
+    </div>
+    <div class="grid grid-3">
+      <% featured.forEach(s => { %>
+        <div class="card svc-card">
+          <span class="svc-id"><%= s.service_code %></span>
+          <h3><%= s.name %></h3>
+          <p><%= s.description %></p>
+          <div class="svc-meta">
+            <span>Min: <%= s.min_order %></span>
+            <span>Max: <%= s.max_order.toLocaleString() %></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+            <span class="svc-rate"><%= settings.currency %><%= s.rate_per_1000 %> <small style="font-size:12px;color:var(--text-dim);font-weight:400;">/1000</small></span>
+            <a href="<%= currentUser ? ('/order/' + s.id) : '/login' %>" class="btn btn-primary btn-sm">Order Now</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>How It Works</h2>
+      <p>Get started in three simple steps.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card" style="text-align:center;">
+        <span class="icon" style="font-size:32px;">1️⃣</span>
+        <h3>Create an Account</h3>
+        <p style="color:var(--text-dim); font-size:14px;">Sign up in seconds with your email and password.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <span class="icon" style="font-size:32px;">2️⃣</span>
+        <h3>Add Funds to Wallet</h3>
+        <p style="color:var(--text-dim); font-size:14px;">Top up your balance instantly via UPI — scan and pay, your wallet updates automatically.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <span class="icon" style="font-size:32px;">3️⃣</span>
+        <h3>Place Your Order</h3>
+        <p style="color:var(--text-dim); font-size:14px;">Choose a service, paste your link, and watch your growth begin.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Why <%= settings.site_name %> is the Cheapest SMM Panel in India</h2>
+    </div>
+    <div style="max-width: 780px; margin: 0 auto; color: var(--text-dim); font-size: 15px; line-height: 1.9;">
+      <p><strong><%= settings.site_name %></strong> is a cheap SMM panel built for creators, small businesses and influencers who want real, affordable social media growth without paying agency prices. Whether you need <strong>cheap Instagram followers</strong>, <strong>Instagram likes</strong>, <strong>Instagram views</strong> for Reels and posts, <strong>Facebook page likes</strong>, <strong>YouTube subscribers</strong>, <strong>Telegram channel members</strong>, <strong>TikTok followers</strong>, or <strong>X (Twitter) followers</strong> — everything is available from one simple dashboard with instant delivery.</p>
+      <p>Unlike traditional social media marketing agencies that charge high monthly retainers, our panel lets you top up your wallet once via secure UPI payment and order exactly what you need, when you need it — no subscriptions, no contracts. Prices start as low as <%= settings.currency %>0.20 per 1000 for Instagram views, making it one of the most affordable Instagram growth services available online in India.</p>
+      <p>All orders are processed with real engagement sources, most starting within minutes. Our support team is available 24/7 through our ticket system if you ever have questions about an order, refill, or your wallet balance.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--bg-soft); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="section-head">
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div style="max-width: 780px; margin: 0 auto;">
+      <div class="card" style="margin-bottom: 14px;">
+        <h3 style="margin-top:0; font-size:16px;">Is it safe to buy Instagram followers and likes?</h3>
+        <p style="color:var(--text-dim); font-size:14px; margin-bottom:0;">Yes — our services deliver engagement gradually and use methods designed to align with normal platform activity patterns. We recommend keeping your account public while an order is processing for the best results.</p>
+      </div>
+      <div class="card" style="margin-bottom: 14px;">
+        <h3 style="margin-top:0; font-size:16px;">How fast will I receive my order?</h3>
+        <p style="color:var(--text-dim); font-size:14px; margin-bottom:0;">Most orders start within minutes of payment confirmation. Delivery speed depends on the specific service — each service listing shows its average completion time.</p>
+      </div>
+      <div class="card" style="margin-bottom: 14px;">
+        <h3 style="margin-top:0; font-size:16px;">What payment methods do you accept?</h3>
+        <p style="color:var(--text-dim); font-size:14px; margin-bottom:0;">We accept UPI payments (Google Pay, PhonePe, Paytm, BHIM and all other UPI apps) through a secure, instant payment gateway. Your wallet balance updates automatically the moment payment is confirmed.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0; font-size:16px;">Do you offer refunds if an order doesn't complete?</h3>
+        <p style="color:var(--text-dim); font-size:14px; margin-bottom:0;">If an order can't be completed, contact our support team via a ticket from your dashboard and we'll review it promptly. Wallet balance is only ever charged once an order is successfully placed.</p>
+      </div>
+    </div>
+  </div>
+</section>

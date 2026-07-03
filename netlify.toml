@@ -1,0 +1,16 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+  command = "npm install"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["views/**", "public/**"]
+  external_node_modules = ["@libsql/client", "ejs", "express-ejs-layouts", "express"]
+
+# Send every request to the Express app running inside the Netlify Function,
+# so all pages, the admin panel, the API, and payment webhooks all work.
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200

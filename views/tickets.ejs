@@ -1,0 +1,28 @@
+<section class="section">
+  <div class="container">
+    <div class="section-title-row" style="margin-top:0;">
+      <h3 style="font-size:26px;">Support Tickets</h3>
+      <a href="/tickets/new" class="btn btn-primary btn-sm">+ New Ticket</a>
+    </div>
+    <% if (tickets.length === 0) { %>
+      <div class="empty-state card"><div class="icon">🎫</div><p>You haven't opened any tickets yet.</p></div>
+    <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Subject</th><th>Status</th><th>Created</th><th></th></tr></thead>
+        <tbody>
+          <% tickets.forEach(t => { %>
+            <tr>
+              <td>#<%= t.id %></td>
+              <td><%= t.subject %></td>
+              <td><span class="badge <%= t.status==='Open' ? 'badge-warn' : (t.status==='Answered' ? 'badge-info' : 'badge-success') %>"><%= t.status %></span></td>
+              <td><%= t.created_at %></td>
+              <td><a href="/tickets/<%= t.id %>" style="color:var(--accent); font-weight:700;">View →</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+</section>

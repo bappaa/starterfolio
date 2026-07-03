@@ -1,0 +1,28 @@
+<section class="section">
+  <div class="container" style="max-width: 640px;">
+    <h3 style="font-size:26px;">Open a New Ticket</h3>
+    <div class="card">
+      <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+      <form method="POST" action="/tickets/new">
+        <div class="field">
+          <label>Subject</label>
+          <input type="text" name="subject" placeholder="e.g. Order not delivered" required>
+        </div>
+        <div class="field">
+          <label>Related Order (optional)</label>
+          <select name="order_id">
+            <option value="">-- None --</option>
+            <% orders.forEach(o => { %>
+              <option value="<%= o.id %>"><%= o.order_no %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="field">
+          <label>Message</label>
+          <textarea name="message" rows="5" placeholder="Describe your issue in detail..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Submit Ticket</button>
+      </form>
+    </div>
+  </div>
+</section>

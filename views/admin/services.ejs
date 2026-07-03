@@ -1,0 +1,50 @@
+<h1>Manage Services</h1>
+
+<div class="card" style="margin-bottom:30px;">
+  <h3 style="margin-top:0;">Add New Service</h3>
+  <form method="POST" action="/admin/services/new">
+    <div class="form-row">
+      <div class="field">
+        <label>Category</label>
+        <select name="category_id" required>
+          <% categories.forEach(c => { %><option value="<%= c.id %>"><%= c.name %></option><% }) %>
+        </select>
+      </div>
+      <div class="field"><label>Service Code</label><input type="text" name="service_code" placeholder="IG-9999"></div>
+      <div class="field"><label>Name</label><input type="text" name="name" required></div>
+      <div class="field"><label>Rate per 1000 (₹)</label><input type="number" step="0.01" name="rate_per_1000" required></div>
+      <div class="field"><label>Min Order</label><input type="number" name="min_order" value="10" required></div>
+      <div class="field"><label>Max Order</label><input type="number" name="max_order" value="100000" required></div>
+      <div class="field"><label>Avg Time</label><input type="text" name="avg_time" placeholder="e.g. 30 minutes"></div>
+    </div>
+    <div class="field"><label>Description</label><textarea name="description" rows="2"></textarea></div>
+    <button type="submit" class="btn btn-primary">+ Add Service</button>
+  </form>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Code</th><th>Category</th><th>Name</th><th>Rate</th><th>Min</th><th>Max</th><th>Active</th><th>Actions</th></tr></thead>
+    <tbody>
+      <% services.forEach(s => { %>
+        <tr>
+          <td><%= s.service_code %></td>
+          <td><%= s.cat_name %></td>
+          <td><%= s.name %></td>
+          <td><%= settings.currency %><%= s.rate_per_1000 %></td>
+          <td><%= s.min_order %></td>
+          <td><%= s.max_order.toLocaleString() %></td>
+          <td><span class="badge <%= s.active ? 'badge-success' : 'badge-danger' %>"><%= s.active ? 'Active' : 'Disabled' %></span></td>
+          <td class="action-btns">
+            <form method="POST" action="/admin/services/<%= s.id %>/toggle" class="inline-form">
+              <button type="submit" class="btn btn-sm btn-outline"><%= s.active ? 'Disable' : 'Enable' %></button>
+            </form>
+            <form method="POST" action="/admin/services/<%= s.id %>/delete" class="inline-form" onsubmit="return confirm('Delete this service?');">
+              <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

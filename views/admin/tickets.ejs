@@ -1,0 +1,18 @@
+<h1>Support Tickets</h1>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>#</th><th>User</th><th>Subject</th><th>Status</th><th>Created</th><th></th></tr></thead>
+    <tbody>
+      <% tickets.forEach(t => { %>
+        <tr>
+          <td>#<%= t.id %></td>
+          <td><%= t.user_name %><br><span style="color:var(--text-dim); font-size:12px;"><%= t.user_email %></span></td>
+          <td><%= t.subject %></td>
+          <td><span class="badge <%= t.status==='Open' ? 'badge-warn' : (t.status==='Answered' ? 'badge-info' : 'badge-success') %>"><%= t.status %></span></td>
+          <td><%= t.created_at %></td>
+          <td><a href="/admin/tickets/<%= t.id %>" style="color:var(--accent); font-weight:700;">View →</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,52 @@
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h1><%= title %></h1>
+      <p>Buy cheap Instagram, Facebook, YouTube, Telegram, TikTok and X (Twitter) services with transparent, per-1000-unit pricing. Add funds via UPI and order instantly.</p>
+    </div>
+
+    <form class="filter-bar" method="GET" action="/services">
+      <input type="text" name="q" placeholder="Search services (e.g. Instagram Followers)" value="<%= q || '' %>">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <div class="chip-row">
+      <a href="/services" class="chip <%= !catId ? 'active' : '' %>">All</a>
+      <% categories.forEach(c => { %>
+        <a href="/services?category=<%= c.id %>" class="chip <%= String(catId) === String(c.id) ? 'active' : '' %>"><%= c.icon %> <%= c.name %></a>
+      <% }) %>
+    </div>
+
+    <% const catNames = Object.keys(grouped); %>
+    <% if (catNames.length === 0) { %>
+      <div class="empty-state">
+        <div class="icon">🔍</div>
+        <h3>No services found</h3>
+        <p>Try a different search term or browse all categories.</p>
+      </div>
+    <% } %>
+    <% catNames.forEach(catName => { %>
+      <div class="svc-cat-block">
+        <h3><%= catName %></h3>
+        <div class="grid grid-3">
+          <% grouped[catName].forEach(s => { %>
+            <div class="card svc-card">
+              <span class="svc-id"><%= s.service_code %></span>
+              <h3><%= s.name %></h3>
+              <p><%= s.description %></p>
+              <div class="svc-meta">
+                <span>Min: <%= s.min_order.toLocaleString() %></span>
+                <span>Max: <%= s.max_order.toLocaleString() %></span>
+                <span>⏱ <%= s.avg_time %></span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                <span class="svc-rate"><%= settings.currency %><%= s.rate_per_1000 %> <small style="font-size:12px;color:var(--text-dim);font-weight:400;">/1000</small></span>
+                <a href="<%= currentUser ? ('/order/' + s.id) : '/login' %>" class="btn btn-primary btn-sm">Order Now</a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</section>

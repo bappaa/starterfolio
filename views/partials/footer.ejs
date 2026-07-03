@@ -1,0 +1,27 @@
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-col">
+      <div class="brand footer-brand"><span class="brand-mark">🚀</span> <span class="brand-text"><%= settings.site_name %></span></div>
+      <p><%= settings.site_name %> is India's growing cheap SMM panel — buy Instagram, YouTube, Facebook, Telegram, X and TikTok services instantly with your wallet balance.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="/">Home</a>
+      <a href="/services">All Services</a>
+      <a href="/signup">Create Account</a>
+      <a href="/login">Log In</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="/tickets">Open a Ticket</a>
+      <a href="mailto:<%= settings.support_email %>"><%= settings.support_email %></a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="/terms">Terms of Service</a>
+      <a href="/refund-policy">Refund Policy</a>
+      <a href="/privacy-policy">Privacy Policy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© <%= new Date().getFullYear() %> <%= settings.site_name %>. All rights reserved.</div>
+</footer>

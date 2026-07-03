@@ -1,0 +1,34 @@
+<h1>Site Settings</h1>
+<% if (message) { %><div class="alert alert-success"><%= message %></div><% } %>
+
+<div class="card" style="max-width:600px;">
+  <h3 style="margin-top:0;">General Settings</h3>
+  <form method="POST" action="/admin/settings">
+    <div class="field"><label>Site Name</label><input type="text" name="site_name" value="<%= settings.site_name %>"></div>
+    <div class="field"><label>Currency Symbol</label><input type="text" name="currency" value="<%= settings.currency %>"></div>
+    <div class="form-row">
+      <div class="field"><label>Min Deposit</label><input type="number" name="min_deposit" value="<%= settings.min_deposit %>"></div>
+      <div class="field"><label>Max Deposit</label><input type="number" name="max_deposit" value="<%= settings.max_deposit %>"></div>
+    </div>
+    <div class="field"><label>Support Email</label><input type="email" name="support_email" value="<%= settings.support_email %>"></div>
+
+    <h4 style="margin: 24px 0 10px;">🧾 Manual UPI QR Payment</h4>
+    <p style="color:var(--text-dim); font-size:13px; margin-top:-6px;">Customers scan a QR generated from your own UPI ID and submit their UTR for you to approve — no payment gateway account needed.</p>
+    <div class="field">
+      <label>
+        <input type="checkbox" name="manual_upi_enabled" <%= settings.manual_upi_enabled !== 'false' ? 'checked' : '' %> style="width:auto; margin-right:8px;">
+        Enable Manual UPI QR payments
+      </label>
+    </div>
+    <div class="field"><label>Your UPI ID (VPA)</label><input type="text" name="upi_id" value="<%= settings.upi_id %>" placeholder="yourname@upi"></div>
+    <div class="field"><label>Payee Name shown to customers</label><input type="text" name="upi_payee_name" value="<%= settings.upi_payee_name || settings.site_name %>" placeholder="e.g. your registered merchant/business name"></div>
+
+    <button type="submit" class="btn btn-primary" style="margin-top:10px;">Save Settings</button>
+  </form>
+</div>
+
+<div class="card" style="max-width:600px; margin-top:20px;">
+  <h3 style="margin-top:0;">📧 Email / SMTP Diagnostics</h3>
+  <p style="color:var(--text-dim); font-size:14px;">If signup OTP codes or order alert emails aren't arriving, use this to send a real test email and see the exact reason why.</p>
+  <a href="/admin/test-email" class="btn btn-outline" target="_blank" rel="noopener">Send Test Email to Myself</a>
+</div>

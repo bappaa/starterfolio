@@ -1,0 +1,102 @@
+<section class="section">
+  <div class="container">
+    <div class="grid grid-2" style="align-items:flex-start;">
+      <div class="card">
+        <h2 style="margin-top:0;">Add Funds via UPI</h2>
+        <p style="color:var(--text-dim); font-size:14px;">Current Balance: <strong style="color:var(--accent);"><%= settings.currency %><%= fmtMoney(currentUser.balance) %></strong></p>
+
+        <% if (success) { %><div class="alert alert-success">✅ Payment successful! Your wallet has been credited.</div><% } %>
+        <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+        <% if (!upiGatewayEnabled && !manualUpiEnabled) { %>
+          <div class="alert alert-info">⚠️ UPI payments aren't fully set up yet. Please check back shortly or contact support.</div>
+        <% } %>
+
+        <div class="upi-badge">
+          <span class="upi-icon">📱</span>
+          <div>
+            <strong>Pay with any UPI app</strong>
+            <div style="color:var(--text-dim); font-size:13px;">Google Pay · PhonePe · Paytm · BHIM</div>
+          </div>
+        </div>
+
+        <% if (upiGatewayEnabled) { %>
+        <div style="margin-top:20px; border:1px solid var(--border); border-radius:10px; padding:16px;">
+          <h4 style="margin:0 0 4px;">⚡ Instant (Automatic)</h4>
+          <p style="color:var(--text-dim); font-size:13px; margin:0 0 14px;">Pay on a secure hosted page — your wallet updates automatically within seconds, no waiting.</p>
+          <form method="POST" action="/deposit/create-order">
+            <div class="amount-chips">
+              <div class="amount-chip" data-amount="100" data-target="depositAmount">₹100</div>
+              <div class="amount-chip" data-amount="500" data-target="depositAmount">₹500</div>
+              <div class="amount-chip" data-amount="1000" data-target="depositAmount">₹1000</div>
+              <div class="amount-chip" data-amount="2500" data-target="depositAmount">₹2500</div>
+              <div class="amount-chip" data-amount="5000" data-target="depositAmount">₹5000</div>
+            </div>
+            <div class="field">
+              <input type="number" id="depositAmount" name="amount" min="<%= settings.min_deposit %>" max="<%= settings.max_deposit %>" step="1" placeholder="Enter amount" required>
+              <div class="field-hint">Min: <%= settings.currency %><%= settings.min_deposit %> · Max: <%= settings.currency %><%= settings.max_deposit %></div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">🔒 Pay Instantly</button>
+          </form>
+        </div>
+        <% } %>
+
+        <% if (manualUpiEnabled) { %>
+        <div style="margin-top:16px; border:1px solid var(--border); border-radius:10px; padding:16px;">
+          <h4 style="margin:0 0 4px;">🧾 Scan &amp; Pay QR <% if (!upiGatewayEnabled) { %><span class="badge badge-info">Recommended</span><% } %></h4>
+          <p style="color:var(--text-dim); font-size:13px; margin:0 0 14px;">Scan a QR with your amount pre-filled and pay. Verified and credited by our team within 10 minutes.</p>
+          <form method="POST" action="/deposit/manual/create">
+            <div class="amount-chips">
+              <div class="amount-chip" data-amount="100" data-target="manualAmount">₹100</div>
+              <div class="amount-chip" data-amount="500" data-target="manualAmount">₹500</div>
+              <div class="amount-chip" data-amount="1000" data-target="manualAmount">₹1000</div>
+              <div class="amount-chip" data-amount="2500" data-target="manualAmount">₹2500</div>
+              <div class="amount-chip" data-amount="5000" data-target="manualAmount">₹5000</div>
+            </div>
+            <div class="field">
+              <input type="number" id="manualAmount" name="amount" min="<%= settings.min_deposit %>" max="<%= settings.max_deposit %>" step="1" placeholder="Enter amount" required>
+              <div class="field-hint">Min: <%= settings.currency %><%= settings.min_deposit %> · Max: <%= settings.currency %><%= settings.max_deposit %></div>
+            </div>
+            <button type="submit" class="btn btn-outline btn-block">📷 Generate My Payment QR</button>
+          </form>
+        </div>
+        <% } %>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:20px;">
+          <h3 style="margin-top:0;">💡 Why Add Funds?</h3>
+          <p style="color:var(--text-dim); font-size:14px; line-height:1.7;">
+            Your wallet balance lets you instantly purchase any service without repeated checkouts.
+            Funds never expire and can be used across all categories — Instagram, YouTube, Facebook, Telegram, X and TikTok.
+          </p>
+        </div>
+        <h3>Recent Deposits</h3>
+        <% if (txns.length === 0) { %>
+          <div class="empty-state card"><div class="icon">💰</div><p>No deposits yet.</p></div>
+        <% } else { %>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Amount</th><th>Method</th><th>Status</th><th>Date</th><th></th></tr></thead>
+              <tbody>
+                <% txns.forEach(t => { %>
+                  <tr>
+                    <td><%= settings.currency %><%= fmtMoney(t.amount) %></td>
+                    <td><%= t.method %></td>
+                    <td><span class="badge <%= t.status==='Completed' ? 'badge-success' : (t.status==='Review' ? 'badge-info' : (t.status==='Pending' ? 'badge-warn' : 'badge-danger')) %>"><%= t.status === 'Review' ? 'Awaiting Approval' : t.status %></span></td>
+                    <td><%= t.created_at %></td>
+                    <td>
+                      <% if (t.method === 'Manual UPI' && t.status === 'Pending') { %>
+                        <a href="/deposit/manual/<%= t.reference %>" class="btn btn-sm btn-outline">Continue →</a>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>

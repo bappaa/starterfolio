@@ -1,0 +1,81 @@
+<section class="section">
+  <div class="container">
+    <div class="dash-hero">
+      <div>
+        <div class="balance-label">Wallet Balance</div>
+        <div class="balance-big"><%= settings.currency %><%= fmtMoney(currentUser.balance) %></div>
+      </div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="/deposit" class="btn btn-primary">➕ Add Funds</a>
+        <a href="/services" class="btn btn-ghost">🛒 Browse Services</a>
+      </div>
+    </div>
+
+    <div class="grid grid-3" style="margin-bottom: 10px;">
+      <div class="stat-card">
+        <div class="num"><%= totalOrders %></div>
+        <div class="lbl">Total Orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="num"><%= settings.currency %><%= fmtMoney(totalSpent) %></div>
+        <div class="lbl">Total Spent</div>
+      </div>
+      <div class="stat-card">
+        <div class="num"><%= settings.currency %><%= fmtMoney(currentUser.balance) %></div>
+        <div class="lbl">Current Balance</div>
+      </div>
+    </div>
+
+    <div class="section-title-row">
+      <h3>Recent Orders</h3>
+      <a href="/orders" style="color:var(--accent); font-size:14px; font-weight:700;">View All →</a>
+    </div>
+    <% if (orders.length === 0) { %>
+      <div class="empty-state card"><div class="icon">📦</div><p>You haven't placed any orders yet.</p><a href="/services" class="btn btn-primary">Browse Services</a></div>
+    <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Order#</th><th>Service</th><th>Qty</th><th>Charge</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          <% orders.forEach(o => { %>
+            <tr>
+              <td><%= o.order_no %></td>
+              <td><%= o.service_name %></td>
+              <td><%= o.quantity.toLocaleString() %></td>
+              <td><%= settings.currency %><%= fmtMoney(o.charge) %></td>
+              <td><span class="badge <%= o.status==='Completed' ? 'badge-success' : (o.status==='Pending' ? 'badge-warn' : (o.status==='Cancelled' ? 'badge-danger' : 'badge-info')) %>"><%= o.status %></span></td>
+              <td><%= o.created_at %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+
+    <div class="section-title-row">
+      <h3>Recent Transactions</h3>
+      <a href="/transactions" style="color:var(--accent); font-size:14px; font-weight:700;">View All →</a>
+    </div>
+    <% if (txns.length === 0) { %>
+      <div class="empty-state card"><div class="icon">💳</div><p>No transactions yet.</p></div>
+    <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Amount</th><th>Method</th><th>Status</th><th>Reference</th><th>Date</th></tr></thead>
+        <tbody>
+          <% txns.forEach(t => { %>
+            <tr>
+              <td style="text-transform:capitalize;"><%= t.type.replace('_',' ') %></td>
+              <td><%= settings.currency %><%= fmtMoney(t.amount) %></td>
+              <td><%= t.method || '-' %></td>
+              <td><span class="badge badge-success"><%= t.status %></span></td>
+              <td><%= t.reference || '-' %></td>
+              <td><%= t.created_at %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+</section>

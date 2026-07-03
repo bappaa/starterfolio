@@ -1,0 +1,38 @@
+<h1>Manage Users</h1>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Balance</th><th>Role</th><th>Status</th><th>Adjust Balance</th><th>Actions</th></tr></thead>
+    <tbody>
+      <% users.forEach(u => { %>
+        <tr>
+          <td><%= u.id %></td>
+          <td><%= u.name %></td>
+          <td><%= u.email %></td>
+          <td><strong><%= settings.currency %><%= fmtMoney(u.balance) %></strong></td>
+          <td><span class="badge <%= u.role==='admin' ? 'badge-primary' : 'badge-info' %>"><%= u.role %></span></td>
+          <td><span class="badge <%= u.status==='active' ? 'badge-success' : 'badge-danger' %>"><%= u.status %></span></td>
+          <td>
+            <form method="POST" action="/admin/users/<%= u.id %>/balance" class="mini-form">
+              <input type="number" name="amount" placeholder="Amount" step="0.01" min="0" required>
+              <select name="action_type" class="status-select">
+                <option value="add">Add</option>
+                <option value="deduct">Deduct</option>
+              </select>
+              <button type="submit" class="btn btn-sm btn-outline">Apply</button>
+            </form>
+          </td>
+          <td class="action-btns">
+            <form method="POST" action="/admin/users/<%= u.id %>/status" class="inline-form">
+              <input type="hidden" name="status" value="<%= u.status==='active' ? 'suspended' : 'active' %>">
+              <button type="submit" class="btn btn-sm <%= u.status==='active' ? 'btn-danger' : 'btn-success' %>"><%= u.status==='active' ? 'Suspend' : 'Activate' %></button>
+            </form>
+            <form method="POST" action="/admin/users/<%= u.id %>/role" class="inline-form">
+              <input type="hidden" name="role" value="<%= u.role==='admin' ? 'user' : 'admin' %>">
+              <button type="submit" class="btn btn-sm btn-outline"><%= u.role==='admin' ? 'Make User' : 'Make Admin' %></button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

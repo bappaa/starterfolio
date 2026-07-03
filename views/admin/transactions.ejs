@@ -1,0 +1,35 @@
+<h1>All Transactions</h1>
+
+<% if (typeof notice !== 'undefined' && notice) { %>
+  <div class="alert <%= noticeType === 'error' ? 'alert-error' : 'alert-success' %>"><%= notice %></div>
+<% } %>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>#</th><th>User</th><th>Type</th><th>Amount</th><th>Method</th><th>Status</th><th>Reference</th><th>Date</th><th></th></tr></thead>
+    <tbody>
+      <% txns.forEach(t => { %>
+        <tr>
+          <td><%= t.id %></td>
+          <td><%= t.user_name %><br><span style="color:var(--text-dim); font-size:12px;"><%= t.user_email %></span></td>
+          <td style="text-transform:capitalize;"><%= t.type.replace('_',' ') %></td>
+          <td><%= settings.currency %><%= fmtMoney(t.amount) %></td>
+          <td><%= t.method || '-' %></td>
+          <td><span class="badge <%= t.status==='Completed' ? 'badge-success' : (t.status==='Pending' ? 'badge-warn' : 'badge-danger') %>"><%= t.status %></span></td>
+          <td><%= t.reference || '-' %></td>
+          <td><%= t.created_at %></td>
+          <td>
+            <% if (t.type === 'deposit' && t.method !== 'Manual UPI' && t.status !== 'Completed') { %>
+              <form method="POST" action="/admin/transactions/<%= t.id %>/recheck">
+                <button type="submit" class="btn btn-sm btn-outline">🔄 Recheck</button>
+              </form>
+            <% } %>
+            <% if (t.method === 'Manual UPI' && t.status === 'Review') { %>
+              <a href="/admin/deposits" class="btn btn-sm btn-primary">Review →</a>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

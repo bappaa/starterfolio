@@ -1,0 +1,45 @@
+<header class="navbar">
+  <div class="container navbar-inner">
+    <a href="/" class="brand">
+      <span class="brand-mark">🚀</span>
+      <span class="brand-text"><%= settings.site_name %></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="/" class="<%= path==='/' ? 'active' : '' %>">Home</a>
+      <a href="/services" class="<%= path==='/services' ? 'active' : '' %>">Services</a>
+      <% if (currentUser) { %>
+        <a href="/dashboard" class="<%= path==='/dashboard' ? 'active' : '' %>">Dashboard</a>
+        <a href="/orders" class="<%= path==='/orders' ? 'active' : '' %>">Orders</a>
+        <a href="/deposit" class="<%= path==='/deposit' ? 'active' : '' %>">Add Funds</a>
+        <a href="/tickets" class="<%= path==='/tickets' ? 'active' : '' %>">Support</a>
+        <% if (currentUser.role === 'admin') { %>
+          <a href="/admin">Admin Panel</a>
+        <% } %>
+      <% } %>
+    </nav>
+    <div class="nav-actions">
+      <% if (currentUser) { %>
+        <a href="/deposit" class="balance-pill" title="Add Funds">
+          <span class="dot"></span> <%= settings.currency %><%= fmtMoney(currentUser.balance) %>
+        </a>
+        <div class="user-menu">
+          <button class="user-btn" id="userMenuBtn"><%= currentUser.name.charAt(0).toUpperCase() %></button>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-head">
+              <strong><%= currentUser.name %></strong>
+              <span><%= currentUser.email %></span>
+            </div>
+            <a href="/profile">My Profile</a>
+            <a href="/transactions">Transactions</a>
+            <a href="/tickets">Support Tickets</a>
+            <form action="/logout" method="POST"><button type="submit">Log Out</button></form>
+          </div>
+        </div>
+      <% } else { %>
+        <a href="/login" class="btn btn-ghost">Log In</a>
+        <a href="/signup" class="btn btn-primary">Sign Up</a>
+      <% } %>
+      <button class="hamburger" id="hamburger">☰</button>
+    </div>
+  </div>
+</header>

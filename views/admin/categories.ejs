@@ -1,0 +1,31 @@
+<h1>Manage Categories</h1>
+
+<div class="card" style="margin-bottom:30px; max-width:500px;">
+  <h3 style="margin-top:0;">Add Category</h3>
+  <form method="POST" action="/admin/categories/new">
+    <div class="form-row">
+      <div class="field"><label>Icon (emoji)</label><input type="text" name="icon" placeholder="📸"></div>
+      <div class="field"><label>Name</label><input type="text" name="name" required></div>
+    </div>
+    <button type="submit" class="btn btn-primary">+ Add Category</button>
+  </form>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Icon</th><th>Name</th><th>Actions</th></tr></thead>
+    <tbody>
+      <% categories.forEach(c => { %>
+        <tr>
+          <td style="font-size:20px;"><%= c.icon %></td>
+          <td><%= c.name %></td>
+          <td>
+            <form method="POST" action="/admin/categories/<%= c.id %>/delete" class="inline-form" onsubmit="return confirm('Delete this category? (only if empty)');">
+              <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

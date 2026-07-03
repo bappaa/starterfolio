@@ -1,0 +1,57 @@
+<h1>Admin Dashboard</h1>
+
+<% if (stats.pendingDeposits > 0) { %>
+  <div class="alert alert-info" style="display:flex; justify-content:space-between; align-items:center;">
+    <span>💰 <strong><%= stats.pendingDeposits %></strong> manual UPI payment<%= stats.pendingDeposits === 1 ? '' : 's' %> waiting for your approval.</span>
+    <a href="/admin/deposits" class="btn btn-sm btn-primary">Review Now</a>
+  </div>
+<% } %>
+
+<div class="grid grid-4" style="margin-bottom:30px;">
+  <div class="stat-card"><div class="num"><%= stats.users %></div><div class="lbl">Total Users</div></div>
+  <div class="stat-card"><div class="num"><%= stats.orders %></div><div class="lbl">Total Orders</div></div>
+  <div class="stat-card"><div class="num"><%= settings.currency %><%= fmtMoney(stats.revenue) %></div><div class="lbl">Total Order Revenue</div></div>
+  <div class="stat-card"><div class="num"><%= settings.currency %><%= fmtMoney(stats.deposits) %></div><div class="lbl">Total Deposits</div></div>
+  <div class="stat-card"><div class="num"><%= stats.pendingOrders %></div><div class="lbl">Pending Orders</div></div>
+  <div class="stat-card"><div class="num"><%= stats.openTickets %></div><div class="lbl">Open Tickets</div></div>
+</div>
+
+<div class="grid grid-2" style="align-items:flex-start;">
+  <div>
+    <h3>Recent Orders</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Order#</th><th>User</th><th>Service</th><th>Charge</th><th>Status</th></tr></thead>
+        <tbody>
+          <% recentOrders.forEach(o => { %>
+            <tr>
+              <td><%= o.order_no %></td>
+              <td><%= o.user_name %></td>
+              <td style="max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><%= o.service_name %></td>
+              <td><%= settings.currency %><%= fmtMoney(o.charge) %></td>
+              <td><span class="badge <%= o.status==='Completed' ? 'badge-success' : (o.status==='Pending' ? 'badge-warn' : 'badge-info') %>"><%= o.status %></span></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div>
+    <h3>Recent Users</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Email</th><th>Balance</th><th>Joined</th></tr></thead>
+        <tbody>
+          <% recentUsers.forEach(u => { %>
+            <tr>
+              <td><%= u.name %></td>
+              <td><%= u.email %></td>
+              <td><%= settings.currency %><%= fmtMoney(u.balance) %></td>
+              <td><%= u.created_at %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

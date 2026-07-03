@@ -1,0 +1,29 @@
+<section class="section">
+  <div class="container" style="max-width: 720px;">
+    <div class="section-title-row" style="margin-top:0;">
+      <h3 style="font-size:24px;">#<%= ticket.id %> · <%= ticket.subject %></h3>
+      <span class="badge <%= ticket.status==='Open' ? 'badge-warn' : (ticket.status==='Answered' ? 'badge-info' : 'badge-success') %>"><%= ticket.status %></span>
+    </div>
+
+    <div class="chat-box">
+      <% messages.forEach(m => { %>
+        <div class="msg <%= m.sender %>">
+          <%= m.message %>
+          <div class="msg-meta"><%= m.sender === 'user' ? 'You' : 'Support Team' %> · <%= m.created_at %></div>
+        </div>
+      <% }) %>
+    </div>
+
+    <% if (ticket.status !== 'Closed') { %>
+    <form method="POST" action="/tickets/<%= ticket.id %>/reply" class="card">
+      <div class="field">
+        <label>Reply</label>
+        <textarea name="message" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Send Reply</button>
+    </form>
+    <% } else { %>
+      <div class="alert alert-info">This ticket has been closed.</div>
+    <% } %>
+  </div>
+</section>

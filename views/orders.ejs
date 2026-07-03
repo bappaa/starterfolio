@@ -1,0 +1,34 @@
+<section class="section">
+  <div class="container">
+    <div class="section-title-row" style="margin-top:0;">
+      <h3 style="font-size:26px;">My Orders</h3>
+      <a href="/services" class="btn btn-primary btn-sm">+ New Order</a>
+    </div>
+    <% if (placed) { %>
+      <div class="alert alert-success">✅ Order <strong><%= placed %></strong> placed successfully! It will begin processing shortly.</div>
+    <% } %>
+    <% if (orders.length === 0) { %>
+      <div class="empty-state card"><div class="icon">📦</div><p>You haven't placed any orders yet.</p><a href="/services" class="btn btn-primary">Browse Services</a></div>
+    <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Order#</th><th>Service</th><th>Link</th><th>Qty</th><th>Charge</th><th>Status</th><th>Remains</th><th>Date</th></tr></thead>
+        <tbody>
+          <% orders.forEach(o => { %>
+            <tr>
+              <td><%= o.order_no %></td>
+              <td><%= o.service_name %></td>
+              <td style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><a href="<%= o.link %>" target="_blank" style="color:var(--accent);"><%= o.link %></a></td>
+              <td><%= o.quantity.toLocaleString() %></td>
+              <td><%= settings.currency %><%= fmtMoney(o.charge) %></td>
+              <td><span class="badge <%= o.status==='Completed' ? 'badge-success' : (o.status==='Pending' ? 'badge-warn' : (o.status==='Cancelled' ? 'badge-danger' : 'badge-info')) %>"><%= o.status %></span></td>
+              <td><%= o.remains %></td>
+              <td><%= o.created_at %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+</section>

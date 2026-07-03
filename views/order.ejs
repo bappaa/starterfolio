@@ -1,0 +1,50 @@
+<section class="section">
+  <div class="container">
+    <div class="grid grid-2" style="align-items:flex-start;">
+      <div class="card">
+        <span class="badge badge-primary"><%= service.service_code %></span>
+        <h2 style="margin: 12px 0 4px;"><%= service.name %></h2>
+        <p style="color:var(--text-dim); font-size:14px;"><%= service.description %></p>
+        <div class="svc-meta" style="margin-top:16px;">
+          <span>Min Order: <strong><%= service.min_order.toLocaleString() %></strong></span>
+          <span>Max Order: <strong><%= service.max_order.toLocaleString() %></strong></span>
+          <span>Avg Time: <strong><%= service.avg_time %></strong></span>
+        </div>
+
+        <% if (error) { %><div class="alert alert-error" style="margin-top:20px;"><%= error %></div><% } %>
+
+        <form method="POST" action="/order/<%= service.id %>" style="margin-top:20px;">
+          <div class="field">
+            <label>Link (Post / Profile / Video URL)</label>
+            <input type="text" name="link" placeholder="https://instagram.com/p/..." required>
+          </div>
+          <div class="field">
+            <label>Quantity</label>
+            <input type="number" id="quantity" name="quantity" min="<%= service.min_order %>" max="<%= service.max_order %>" placeholder="Enter quantity" required>
+            <span id="svcRate" data-rate="<%= service.rate_per_1000 %>" data-currency="<%= settings.currency %>" style="display:none;"></span>
+            <div class="field-hint">Min <%= service.min_order.toLocaleString() %> · Max <%= service.max_order.toLocaleString() %></div>
+          </div>
+
+          <div class="order-summary">
+            <div class="order-summary-row"><span>Rate per 1000</span><span><%= settings.currency %><%= service.rate_per_1000 %></span></div>
+            <div class="order-summary-row"><span>Your Balance</span><span><%= settings.currency %><%= fmtMoney(currentUser.balance) %></span></div>
+            <div class="order-summary-row total"><span>Estimated Charge</span><span id="calcCharge"><%= settings.currency %>0.00</span></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top:20px;">Place Order</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0;">📋 Order Guidelines</h3>
+        <ul style="color:var(--text-dim); font-size:14px; line-height:2;">
+          <li>Make sure your account/post is <strong>public</strong> before ordering.</li>
+          <li>Do not change your username/link after placing the order.</li>
+          <li>Orders start processing automatically — average time shown above.</li>
+          <li>Once placed, the charge is deducted instantly from your wallet balance.</li>
+          <li>Need help? Open a <a href="/tickets/new" style="color:var(--accent);">support ticket</a> anytime.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

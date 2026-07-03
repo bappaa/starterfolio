@@ -1,0 +1,86 @@
+<section class="section">
+  <div class="container" style="max-width: 720px;">
+    <a href="/deposit" style="color:var(--text-dim); font-size:13.5px;">← Back to Add Funds</a>
+
+    <div class="grid grid-2" style="align-items:flex-start; margin-top:14px;">
+      <div class="card" style="text-align:center;">
+        <h2 style="margin-top:0;">Scan &amp; Pay</h2>
+
+        <% if (txn.status === 'Pending') { %>
+          <img src="<%= qrDataUrl %>" alt="UPI payment QR code" style="width:220px; height:220px; border-radius:12px; background:#fff; padding:10px;">
+          <div style="margin-top:16px; font-size:28px; font-weight:800; color:var(--accent);"><%= settings.currency %><%= fmtMoney(txn.amount) %></div>
+          <div style="color:var(--text-dim); font-size:13.5px; margin-top:4px;">Pay to: <strong><%= settings.upi_id %></strong></div>
+          <div style="margin-top:14px;">
+            <a href="<%= upiLink %>" class="btn btn-primary">📱 Open in UPI App</a>
+          </div>
+          <div class="field-hint" style="margin-top:14px;">On mobile, tap "Open in UPI App" to pay directly. On desktop, scan the QR with any UPI app (Google Pay, PhonePe, Paytm, BHIM). This QR stays valid — take your time, there's no rush.</div>
+        <% } else if (txn.status === 'Review') { %>
+          <div style="font-size:52px;">⏳</div>
+          <h3>Payment Submitted — Verifying</h3>
+          <p style="color:var(--text-dim); font-size:14px;">Thanks! Our team checks and confirms manual payments <strong>within 10 minutes</strong> during active hours. Your wallet will be credited automatically the moment it's approved — no need to do anything else.</p>
+          <p style="color:var(--text-dim); font-size:13px;">You can check <a href="/transactions" style="color:var(--accent);">Transactions</a> anytime to see the latest status.</p>
+        <% } else if (txn.status === 'Completed') { %>
+          <div style="font-size:52px;">✅</div>
+          <h3>Payment Approved!</h3>
+          <p style="color:var(--text-dim); font-size:14px;"><%= settings.currency %><%= fmtMoney(txn.amount) %> has been credited to your wallet.</p>
+          <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+        <% } else if (txn.status === 'Rejected') { %>
+          <div style="font-size:52px;">⚠️</div>
+          <h3>Payment Not Verified</h3>
+          <p style="color:var(--text-dim); font-size:14px;">
+            <% if (txn.admin_note) { %><%= txn.admin_note %><% } else { %>We couldn't verify this payment against our records.<% } %>
+          </p>
+          <a href="/tickets/new" class="btn btn-outline">Contact Support</a>
+        <% } %>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <h3 style="margin-top:0;">Reference</h3>
+          <div style="font-family: monospace; font-size:18px; font-weight:700; letter-spacing:1px; background:var(--bg-soft); padding:10px 14px; border-radius:8px; display:inline-block;"><%= txn.reference %></div>
+          <p style="color:var(--text-dim); font-size:13px; margin-top:10px;">This reference is pre-filled in your UPI app's note/remark field when you scan the QR — it helps us match your payment quickly.</p>
+        </div>
+
+        <% if (txn.status === 'Pending') { %>
+        <div class="card">
+          <h3 id="paidHeading" style="margin-top:0;">Already Paid?</h3>
+          <p style="color:var(--text-dim); font-size:13.5px;">If you've completed the payment, let us know below. Adding your UTR / Transaction ID is optional but helps us verify faster.</p>
+          <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+          <form method="POST" action="/deposit/manual/<%= txn.reference %>/submit">
+            <div class="field">
+              <label>UTR / Transaction ID <span style="color:var(--text-dim); font-weight:400;">(optional)</span></label>
+              <input type="text" name="utr" placeholder="e.g. 402812345678">
+            </div>
+            <button type="submit" id="paidBtn" class="btn btn-primary btn-block">I've Paid — Submit for Verification</button>
+          </form>
+        </div>
+        <% } %>
+
+        <% if (submitted) { %>
+          <div class="alert alert-success" style="margin-top:16px;">✅ Submitted! We'll review and credit your wallet within 10 minutes.</div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% if (txn.status === 'Pending') { %>
+<style>
+  @keyframes gentlePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.5); }
+    50% { box-shadow: 0 0 0 10px rgba(108, 92, 231, 0); }
+  }
+  .nudge-pulse { animation: gentlePulse 1.6s ease-out infinite; }
+</style>
+<script>
+  // After a minute, give the "I've Paid" button a gentle pulse as a friendly reminder to
+  // submit once payment is done — the QR and payment options never disappear or expire,
+  // so nobody who's simply taking their time gets stuck mid-payment.
+  setTimeout(function () {
+    var btn = document.getElementById('paidBtn');
+    var heading = document.getElementById('paidHeading');
+    if (btn) btn.classList.add('nudge-pulse');
+    if (heading) heading.innerHTML = '👉 Already Paid?';
+  }, 60000);
+</script>
+<% } %>

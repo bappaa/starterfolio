@@ -1,0 +1,31 @@
+<h1>Manage Orders</h1>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Order#</th><th>User</th><th>Service</th><th>Link</th><th>Qty</th><th>Charge</th><th>Status</th><th>Remains</th><th>Update</th></tr></thead>
+    <tbody>
+      <% orders.forEach(o => { %>
+        <tr>
+          <td><%= o.order_no %></td>
+          <td><%= o.user_name %><br><span style="color:var(--text-dim); font-size:12px;"><%= o.user_email %></span></td>
+          <td style="max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><%= o.service_name %></td>
+          <td style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><a href="<%= o.link %>" target="_blank" style="color:var(--accent);"><%= o.link %></a></td>
+          <td><%= o.quantity.toLocaleString() %></td>
+          <td><%= settings.currency %><%= fmtMoney(o.charge) %></td>
+          <td><span class="badge <%= o.status==='Completed' ? 'badge-success' : (o.status==='Pending' ? 'badge-warn' : (o.status==='Cancelled' ? 'badge-danger' : 'badge-info')) %>"><%= o.status %></span></td>
+          <td><%= o.remains %></td>
+          <td>
+            <form method="POST" action="/admin/orders/<%= o.id %>/status" class="mini-form">
+              <select name="status" class="status-select">
+                <% ['Pending','In Progress','Completed','Partial','Cancelled'].forEach(s => { %>
+                  <option value="<%= s %>" <%= o.status===s ? 'selected' : '' %>><%= s %></option>
+                <% }) %>
+              </select>
+              <input type="number" name="remains" value="<%= o.remains %>" min="0">
+              <button type="submit" class="btn btn-sm btn-outline">Save</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,44 @@
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h2>Create your account</h2>
+    <p class="sub">Join <%= settings.site_name %> and start growing your socials today.</p>
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+    <% if (googleEnabled) { %>
+      <a href="/auth/google" class="btn btn-outline btn-block google-btn">
+        <svg width="18" height="18" viewBox="0 0 48 48" style="vertical-align:middle; margin-right:8px;">
+          <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.4-.1-2.7-.4-3.5z"/>
+          <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3c-7.4 0-13.7 4.1-17.7 10.2z"/>
+          <path fill="#4CAF50" d="M24 45c5.5 0 10.4-1.9 14.2-5.1l-6.6-5.4C29.5 36.3 26.9 37 24 37c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C10.2 40.8 16.6 45 24 45z"/>
+          <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.3-4.1 5.7l6.6 5.4C41.9 36 45 30.6 45 24c0-1.4-.1-2.7-.4-3.5z"/>
+        </svg>
+        Continue with Google
+      </a>
+      <div class="auth-divider"><span>or</span></div>
+    <% } %>
+
+    <form method="POST" action="/signup">
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="John Doe" required>
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="you@example.com" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="At least 6 characters" required>
+      </div>
+      <div class="field">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" placeholder="Re-enter password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+    </form>
+    <% if (otpSignupEnabled) { %>
+      <div class="field-hint" style="text-align:center; margin-top:14px;">📧 We'll email you a 6-digit code to verify your address before your account is created.</div>
+    <% } %>
+    <div class="auth-foot">Already have an account? <a href="/login" style="color:var(--accent); font-weight:700;">Log in</a></div>
+  </div>
+</div>
